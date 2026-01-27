@@ -30,6 +30,7 @@ class Piece:
 class Rook(Piece):
     def __init__(self, row, column, Color, PieceType, has_moved=False):
         super().__init__(row, column, Color, PieceType)
+        self.has_moved = False
 
 class Knight(Piece):
     def __init__(self, row, column, Color, PieceType):
@@ -44,10 +45,14 @@ class Queen(Piece):
         super().__init__(row, column, Color, PieceType)
 
 class King(Piece):
-    def __init__(self, row, column, Color, PieceType, has_moved=False):
+    def __init__(self, row, column, Color, PieceType, has_moved=False, in_check=False, mated=False):
         super().__init__(row, column, Color, PieceType)
+        self.has_moved = False
+        self.in_check = False
+        self.mated = False
 
 class Pawn(Piece):
     def __init__(self, row, column, Color, PieceType, has_moved=False):
         super().__init__(row, column, Color, PieceType)
+        self.has_moved = False
 
