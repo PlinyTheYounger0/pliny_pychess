@@ -1,5 +1,6 @@
 
 from piece import (
+        Piece,
         PieceType, 
         Color, 
         Rook,
@@ -57,3 +58,28 @@ def set_pieces(board):
         board[row].insert(column, piece)
     
     return board
+
+def get_piece(board, piece_type, origin_column, origin_row):
+    piece = board[origin_row][origin_column]
+
+    if not isinstance(piece, Piece):
+        raise Exception('No piece at origin position. Please try a different position')
+    elif piece.piece_type != piece_type:
+        raise Exception('There is not the piece you sought at that position')
+    else:
+        return piece
+
+def print_board(board):
+    for row in board:
+        print(*(item.rep if isinstance(item, Piece) else item for item in row))
+
+
+
+
+
+
+
+
+
+
+

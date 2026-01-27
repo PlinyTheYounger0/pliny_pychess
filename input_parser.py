@@ -5,20 +5,7 @@ def input_parser(user_input):
     if len(user_input) != 5:
         raise ValueError('Input must be 5 characters long')
 
-    if not isinstance(user_input[0], str):
-        raise ValueError('First character of input (piece) must be a single letter')
-    if not isinstance(user_input[1], str):
-        raise ValueError('Second character of input (column) must be a single letter')
-    if not isinstance(user_input[2], int):
-        raise ValueError('Third character of input (row) must be an int')
-    if not isinstance(user_input[3], str):
-        raise ValueError('Fourth character of input (column) must be a single letter')
-    if not isinstance(user_input[4], int):
-        raise ValueError('Fifith character of input (row) must be an int')
-
     piece_var = user_input[0]
-    origin_pos = (user_input[1], user_input[2])
-    new_pos = (user_input[3], user_input[4])
 
     if piece_var == 'R':
         piece = PieceType.ROOK
@@ -35,4 +22,34 @@ def input_parser(user_input):
     else:
         raise Exception('First character must be R, N, B, Q, K, or P')
 
-    return piece, origin_pos, new_pos
+    columns = [user_input[1], user_input[3]]
+
+    for column in columns:
+        if column == 'A':
+            column = 1
+        elif column == 'B':
+            column = 2
+        elif column == 'C':
+            column = 3
+        elif column == 'D':
+            column = 4
+        elif column == 'E':
+            column = 5
+        elif column == 'F':
+            column = 6
+        elif column == 'G':
+            column = 7
+        elif column == 'H':
+            column = 8
+        else:
+            raise Exception('Error in column input. Ensure use of A-H')
+
+    if user_input[2] < 1 or user_input[2] > 8 or user_input[4] < 1 or user_input[4] > 8:
+        raise Exception('Error in row input. Rows must be between 1 and 8')
+
+    origin_column = columns[0]
+    orgin_row = user_input[2]
+    new_column = columns[1]
+    new_row = user_input[4]
+
+    return piece, origin_column, origin_row, new_column, new_row
