@@ -18,38 +18,39 @@ def input_parser(user_input):
     elif piece_var == 'K':
         piece = PieceType.KING
     elif piece_var == 'P':
-        piece = Piecetype.PAWN
+        piece = PieceType.PAWN
     else:
         raise Exception('First character must be R, N, B, Q, K, or P')
 
-    columns = [user_input[1], user_input[3]]
+    str_columns = [user_input[1], user_input[3]]
+    int_columns = []
 
-    for column in columns:
+    for column in str_columns:
         if column == 'A':
-            column = 1
+            int_columns.append(1)
         elif column == 'B':
-            column = 2
+            int_columns.append(2)
         elif column == 'C':
-            column = 3
+            int_columns.append(3)
         elif column == 'D':
-            column = 4
+            int_columns.append(4)
         elif column == 'E':
-            column = 5
+            int_columns.append(5)
         elif column == 'F':
-            column = 6
+            int_columns.append(6)
         elif column == 'G':
-            column = 7
+            int_columns.append(7)
         elif column == 'H':
-            column = 8
+            int_columns.append(8)
         else:
             raise Exception('Error in column input. Ensure use of A-H')
 
-    if user_input[2] < 1 or user_input[2] > 8 or user_input[4] < 1 or user_input[4] > 8:
+    if int(user_input[2]) < 1 or int(user_input[2]) > 8 or int(user_input[4]) < 1 or int(user_input[4]) > 8:
         raise Exception('Error in row input. Rows must be between 1 and 8')
 
-    origin_column = columns[0]
-    orgin_row = user_input[2]
-    new_column = columns[1]
-    new_row = user_input[4]
+    origin_column = int_columns[0]
+    origin_row = 9 - int(user_input[2])
+    new_column = int_columns[1]
+    new_row = 9 - int(user_input[4])
 
     return piece, origin_column, origin_row, new_column, new_row

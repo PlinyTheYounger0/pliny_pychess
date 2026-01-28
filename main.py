@@ -1,5 +1,4 @@
 
-import sys
 from input_parser import input_parser
 from piece import Piece, Color
 from board import init_board, set_pieces, print_board, get_piece
@@ -22,8 +21,19 @@ def main():
             break
         else:
             piece, origin_column, origin_row, new_column, new_row = input_parser(player_input)
-
-
+        
+        moving_piece = get_piece(board, piece, origin_column, origin_row)
+        
+        if turn_color == 'White' and moving_piece.color != Color.WHITE:
+            raise Exception('You cannot move a piece of the opposite color')
+        elif turn_color == 'Black' and moving_piece.color != Color.BLACK:
+            raise Exception('You cannot move a piece of the opposite color')
+            
+        moving_piece.check_valid_moves(board)
+        print(moving_piece.valid_moves)
+        print(new_row, new_column)
+        'board = moving_piece.move(board, new_row, new_column)'
+        
         if turn_color == 'White':
             turn_color = 'Black'
         elif turn_color == 'Black':
