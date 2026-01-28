@@ -1,7 +1,7 @@
 
 from input_parser import input_parser
 from piece import Piece, Color
-from board import init_board, set_pieces, print_board, get_piece
+from board import init_board, set_pieces, print_board, get_piece, update_pieces
 
 def main():
     board = init_board()
@@ -13,6 +13,7 @@ def main():
 
     while white_king.mated == False and black_king.mated == False:
         print_board(board)
+        update_pieces(board)
 
         player_input = input(f'What is your move {turn_color}?: ')
         player_input = player_input.upper()
@@ -25,18 +26,20 @@ def main():
         moving_piece = get_piece(board, piece, origin_column, origin_row)
         
         if turn_color == 'White' and moving_piece.color != Color.WHITE:
-            raise Exception('You cannot move a piece of the opposite color')
+            print('\n***You cannot move a piece of the opposite color***\n')
         elif turn_color == 'Black' and moving_piece.color != Color.BLACK:
-            raise Exception('You cannot move a piece of the opposite color')
-            
-        moving_piece.check_valid_moves(board)
-        print(moving_piece.valid_moves)
-        print(new_row, new_column)
-        'board = moving_piece.move(board, new_row, new_column)'
+            print('\n***You cannot move a piece of the opposite color***\n')
+        else:    
+            moving_piece.check_valid_moves(board)
+            print(moving_piece)
+            print('Same Object?', board[origin_row][origin_column] == moving_piece)
+            print('Moving Piece Row, Column', (moving_piece.row, moving_piece.column))
+            print(moving_piece.valid_moves)
+            board, move_exit_code = moving_piece.move(board, new_row, new_column)
         
-        if turn_color == 'White':
+        if turn_color == 'White' and move_exit_code == 0:
             turn_color = 'Black'
-        elif turn_color == 'Black':
+        elif turn_color == 'Black' and move_exit_code == 0:
             turn_color = 'White'
 
 if __name__ == '__main__':

@@ -63,15 +63,23 @@ def get_piece(board, piece_type, origin_column, origin_row):
     piece = board[origin_row][origin_column]
 
     if not isinstance(piece, Piece):
-        raise Exception('No piece at origin position. Please try a different position')
+        print('\nNo piece at origin position. Please try a different position\n')
+        return
     elif piece.piece_type != piece_type:
-        raise Exception('There is not the piece you sought at that position')
+        print('\nThere is not the piece you sought at that position\n')
+        return
     else:
         return piece
 
 def print_board(board):
     for row in board:
         print(*(item.rep if isinstance(item, Piece) else item for item in row))
+
+def update_pieces(board):
+    for row in board:
+        for item in row:
+            if isinstance(item, Piece):
+                item.check_valid_moves(board)
 
 
 
