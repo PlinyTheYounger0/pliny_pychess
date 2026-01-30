@@ -35,26 +35,18 @@ class Rook(Piece):
 
     def move(self, board, new_row, new_column):
         move = (new_row, new_column)
-        old_column = self.column
-        old_row = self.row
 
         if self.valid_moves:
             if move in self.valid_moves:
-                board[new_row][new_column] = self
+                board[self.row][self.column] = ' *'
                 self.column = new_column
                 self.row = new_row
-                board[old_row][old_column] = ' *'
+                board[self.column][row] = self
                 self.has_moved = True
-            else:
-                print('\n***Invalid Move***\n')
-                return board, 1
+                return board, 0
 
-        else:
-            print('\n***Invalid Move***\n')
-            return board, 1
-
-        return board, 0
-                
+        print('\n***Invalid Move***\n')
+        return board, 1
 
     def check_valid_moves(self, board):
         self.valid_moves = []
@@ -74,7 +66,7 @@ class Rook(Piece):
 
                 if isinstance(space, Piece):
                     if self.color != space.color:
-                        self.valid_moves.append((self.row, column))
+                        self.valid_moves.append((row, column))
                     break 
                 
                 self.valid_moves.append((row, column))
@@ -88,20 +80,18 @@ class Knight(Piece):
         
     def move(self, board, new_row, new_column):
             move = (new_row, new_column)
-            old_column = self.column
-            old_row = self.row
 
             if self.valid_moves:
                 if move in self.valid_moves:
-                    board[new_row][new_column] = self
+                    board[self.row][self.column] = ' *'
                     self.column = new_column
                     self.row = new_row
-                    board[old_row][old_column] = ' *'
-            else:
-                print('\n***Invalid Move***\n')
-                return board, 1
+                    board[self.row][self.column] = self
+                    return board, 0
+            
+            print('\n***Invalid Move***\n')
+            return board, 1
 
-            return board, 0
 
     def check_valid_moves(self, board):
         self.valid_moves = []
@@ -135,79 +125,94 @@ class Bishop(Piece):
         super().__init__(row, column, Color, PieceType)
 
     def move(self, board, new_row, new_column):
-        pass
-'''
+        move = (new_row, new_column)
+
+        if self.valid_moves:
+            if move in self.valid_moves:
+                board[self.row][self.column] = ' *'
+                self.row = new_row
+                self.column = new_column
+                board[self.row][self.column] = self
+                return board, 0
+
+        print ('\n***Invalid Move***\n')
+        return board, 1
+
     def check_valid_moves(self, board):
         self.valid_moves = []
-        count = 1
-        
-        for column in range(self.column + 1, 9):
-            if self.row - count > 0:
-                space = board[self.row - count][column]
-                count += 1
+
+        directions = [
+                    (-1, 1),
+                    (-1, -1),
+                    (1, 1),
+                    (1, -1),
+                ]
+
+        for direction_row, direction_column in directions:
+            row = self.row + direction_row
+            column = self.column + direction_column
+
+            while 1 <= row <= 8 and 1 <= column <= 8:
+                space = board[row][column]
 
                 if isinstance(space, Piece):
-                    if self.color == space.color:
-                        break
-                    else:
-                        self.valid_moves.append((self.row - count, column))
-                        break
-                else:
-                    self.valid_moves.append((self.row - count, column))
+                    if self.color != space.color:
+                        self.valid_moves.append((row, column))
+                    break
 
-        count = 1
+                self.valid_moves.append((row, column))
 
-        for column in range(self.column - 1, 0, -1):
-            if self.row - count > 0:
-                space = board[self.row - count][column]
-                count += 1
-
-                if isinstance(space, Piece):
-                    if self.color == space.color:
-                        break
-                    else:
-                        self.valid_moves.append((self.row - count, column)
-                        break
-                else:
-                    self.vald_moves.append((self.row - count, column))
-
-        count = 1
-
-        for column in range(self.column + 1, 9):
-            if self.row + count < 9:
-                space = board[self.row + count][column]
-                count += 1
-                
-                if isinstance(space, Piece):
-                    if self.color == space.color:
-                        break
-                    else:
-                        self.valid_moves.append((self.row + count, column)
-                        break   
-                else:   
-                    self.vald_moves.append((self.row + count, column))
-
-        count = 1
-
-        for column in range(self.column - 1, 0, -1):
-            if self.row + count < 9:
-                space = board[self.row + count][column]
-                count += 1
-                
-                if isinstance(space, Piece):
-                    if self.color == space.color:
-                        break
-                    else:
-                        self.valid_moves.append((self.row + count, column)
-                        break   
-                else:   
-                    self.vald_moves.append((self.row + count, column))
-'''
-
+                row += direction_row
+                column += direction_column
 
 class Queen(Piece):
     def __init__(self, row, column, Color, PieceType):
         super().__init__(row, column, Color, PieceType)
+
+    def move(self, board, new_row, new_column):
+        move = (new_row, new_column)
+
+        if self.valid_moves:
+            if move in self.valid_moves:
+                board[self.row][self.column] = ' *'
+                self.row = new_row
+                self.column = new_column
+                board[self.row][self.column] = self
+                return board, 0
+
+        print('\n***Invalid Move***\n')
+        return board, 1
+    
+    def check_valid_moves(self, board):
+        self.valid_moves = []
+
+        directions = [
+                    (-1, 1),
+                    (-1, 0),
+                    (-1, -1),
+                    (0, -1),
+                    (1, -1),
+                    (1, 0),
+                    (1, 1),
+                    (0, 1),
+                ]
+
+        for direction_row, direction_column in directions:
+            row = self.row + direction_row
+            column = self.column + direction_column
+
+            while 1 <= row <= 8 and 1 <= column <= 8:
+                space = board[row][column]
+
+                if isinstance(space, Piece):
+                    if self.color != space.color:
+                        self.valid_moves.append((row, column))
+                    break
+
+                self.valid_moves.append((row, column))
+
+                row += direction_row
+                column += direction_column
 
 class King(Piece):
     def __init__(self, row, column, Color, PieceType, has_moved=False, in_check=False, mated=False):
@@ -223,21 +228,18 @@ class Pawn(Piece):
 
     def move(self, board, new_row, new_column):
         move = (new_row, new_column)
-        old_column = self.column
-        old_row = self.row
 
         if self.valid_moves:
             if move in self.valid_moves:
-                board[new_row][new_column] = self
+                board[self.row][self.column] = ' *'
                 self.column = new_column
                 self.row = new_row
-                board[old_row][old_column] = ' *'
+                board[self.row][self.column] = self
                 self.has_moved = True
-        else:
-            print('\n***Invalid Move***\n')
-            return board, 1
+                return board, 0
 
-        return board, 0
+        print('\n***Invalid Move***\n')
+        return board, 1
 
     def check_valid_moves(self, board):
         self.valid_moves = []
