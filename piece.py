@@ -34,21 +34,23 @@ class Rook(Piece):
         self.has_moved = False
 
         def move(self, board, new_row, new_column):
-            self.has_moved = True
             move = (new_row, new_column)
             old_column = self.column
             old_row = self.row
 
-            if move in self.valid_moves:
-                board[new_row][new_column] = self
-                self.column = new_column
-                self.row = new_row
-                board[old_row][old_column] = ' *'
+            if self.valid_moves:
+                if move in self.valid_moves:
+                    board[new_row][new_column] = self
+                    self.column = new_column
+                    self.row = new_row
+                    board[old_row][old_column] = ' *'
+                    self.has_moved = True
             else:
                 print('\n***Invalid Move***\n')
                 return board, 1
 
             return board, 0
+                
 
         def check_valid_moves(self, board):
             self.valid_moves = []
@@ -105,6 +107,85 @@ class Rook(Piece):
 class Knight(Piece):
     def __init__(self, row, column, Color, PieceType):
         super().__init__(row, column, Color, PieceType)
+        
+    def move(self, board, new_row, new_column):
+        pass
+
+    def check_valid_moves(self, board):
+        self.valid_moves = []
+
+        if self.row - 2 > 0:
+
+            if self.column + 1 < 8:
+                space = board[self.row - 2][self.column + 1]
+                if isinstance (space, Piece):
+                    if self.color != space.color:
+                        self.valid_moves.append((self.row - 2, self.column + 1))
+                else:
+                    self.valid_moves.append((self.row - 2, self.column + 1))
+
+            if self.column - 1 > 0:
+                space = board[self.row - 2][self.column - 1]
+                if isinstance(space, Piece):
+                    if self.color != space.color:
+                        self.valid_moves.append((self.row - 2, self.column - 1))
+                else:
+                    self.valid_moves.append((self.row - 2, self.column - 1))
+
+        if self.row + 2 < 9:
+
+            if self.column + 1 < 8:
+                space = board[self.row + 2][self.column + 1]
+                if isinstance (space, Piece):
+                    if self.color != space.color:
+                        self.valid_moves.append((self.row + 2, self.column + 1))
+                else:           
+                    self.valid_moves.append((self.row + 2, self.column + 1))
+                    
+            if self.column - 1 > 0:
+                space = board[self.row + 2][self.column - 1]
+                if isinstance(space, Piece):
+                    if self.color != space.color:
+                        self.valid_moves.append((self.row + 2, self.column - 1))
+                else:   
+                    self.valid_moves.append((self.row + 2, self.column - 1))
+
+        if self.column + 2 < 9:
+
+            if self.row - 1 > 0:
+                space = board[self.row - 1][self.column + 2]
+                if isinstance(space, Piece):
+                    if self.color != space.color:
+                        self.valid_moves.append((self.row - 1, self.column + 2))
+                else:
+                    self.valid_moves.append((self.row - 1, self.column + 2))
+
+            if self.row + 1 < 9:
+                space = board[self.row + 1][self.column + 2]
+                if isinstance(space, Piece):
+                    if self.color != space.color:
+                        self.valid_moves.append((self.row + 1, self.column + 2))
+                else:
+                    self.valid_moves.append((self.row + 1, self.column + 2))
+
+        if self.column - 2 > 0:
+
+            if self.row - 1 > 0:
+                space = board[self.row - 1][self.column - 2]
+                if isinstance(space, Piece):
+                    if self.color != space.color:
+                        self.valid_moves.append((self.row - 1, self.column - 2))
+                else:   
+                    self.valid_moves.append((self.row - 1, self.column - 2))
+                    
+            if self.row + 1 < 9:
+                space = board[self.row + 1][self.column - 2]
+                if isinstance(space, Piece):
+                    if self.color != space.color:
+                        self.valid_moves.append((self.row + 1, self.column - 2))
+                else:   
+                    self.valid_moves.append((self.row + 1, self.column - 2))
+
 
 class Bishop(Piece):
     def __init__(self, row, column, Color, PieceType):
@@ -127,16 +208,17 @@ class Pawn(Piece):
         self.has_moved = False
 
     def move(self, board, new_row, new_column):
-        self.has_moved = True
         move = (new_row, new_column)
         old_column = self.column
         old_row = self.row
 
-        if move in self.valid_moves:
-            board[new_row][new_column] = self
-            self.column = new_column
-            self.row = new_row
-            board[old_row][old_column] = ' *'
+        if self.valid_moves:
+            if move in self.valid_moves:
+                board[new_row][new_column] = self
+                self.column = new_column
+                self.row = new_row
+                board[old_row][old_column] = ' *'
+                self.has_moved = True
         else:
             print('\n***Invalid Move***\n')
             return board, 1
@@ -146,37 +228,62 @@ class Pawn(Piece):
     def check_valid_moves(self, board):
         self.valid_moves = []
 
-        if self.has_moved == False:
-            if self.color == Color.WHITE and not isinstance(board[self.row - 1][self.column], Piece) and not isinstance(board[self.row - 2][self.column], Piece):
-                self.valid_moves.append((self.row - 2, self.column))
-            elif self.color == Color.BLACK and not isinstance(board[self.row + 1][self.column], Piece) and not isinstance(board[self.row + 2][self.column], Piece):
-                self.valid_moves.append((self.row + 2, self.column))
 
-        if self.color == Color.WHITE and not isinstance(board[self.row - 1][self.column], Piece):
+        if self.has_moved == False:
+
+            if self.color == Color.WHITE:
+                space_1 = board[self.row - 1][self.column]
+                space_2 = board[self.row - 2][self.column]
+                if not isinstance(space_1, Piece) and not isinstance(space_2, Piece):
+                    self.valid_moves.append((self.row - 2, self.column))
+
+            elif self.color == Color.BLACK:
+                space_1 = board[self.row + 1][self.column]
+                space_2 = board[self.row + 2][self.column]
+                if not isinstance(space_1, Piece) and not isinstance(space_2, Piece):
+                    self.valid_moves.append((self.row + 2, self.column))
+
+
+        if self.color == Color.WHITE:
             if self.row - 1 > 0:
-                self.valid_moves.append((self.row - 1, self.column))
-        elif self.color == Color.BLACK and not isinstance(board[self.row + 1][self.column], Piece):
-            self.valid_moves.append((self.row + 1, self.column))
+                space = board[self.row - 1][self.column]
+                if not isinstance(space, Piece):
+                    self.valid_moves.append((self.row - 1, self.column))
+
+        elif self.color == Color.BLACK:
+            space = board[self.row + 1][self.column]
+            if not isinstance(space, Piece):
+                self.valid_moves.append((self.row + 1, self.column))
+
                     
         if self.column + 1 < 9:
-            if self.color == Color.WHITE and isinstance(board[self.row - 1][self.column + 1], Piece):
-                piece = board[self.row - 1][self.column + 1]
-                if piece.color != self.color:
-                    self.valid_moves.append((self.row - 1, self.column + 1))
-            elif self.color == Color.BLACK and isinstance(board[self.row + 1][self.column + 1], Piece):
-                piece = board[self.row + 1][self.row + 1]
-                if piece.color != self.color:
-                    self.valid_moves.append((self.row + 1, self.column + 1))
+
+            if self.color == Color.WHITE:
+                space = board[self.row -1][self.column + 1]
+                if isinstance(space, Piece):
+                    if space.color != self.color:
+                        self.valid_moves.append((self.row - 1, self.column + 1))
+
+            elif self.color == Color.BLACK:
+                space = board[self.row + 1][self.row + 1]
+                if isinstance(space, Piece):
+                    if space.color != self.color:
+                        self.valid_moves.append((self.row + 1, self.column + 1))
+
 
         if self.column - 1 > 0:
-            if self.color == Color.WHITE and isinstance(board[self.row - 1][self.column - 1], Piece):
-                piece = board[self.row - 1][self.column - 1]
-                if piece.color != self.color:
-                    self.valid_moves.append((self.row - 1, self.column - 1))
-            elif self.color == Color.BLACK and isinstance(board[self.row + 1][self.column - 1], Piece):
-                piece = board[self.row + 1][self.column - 1]
-                if piece.color != self.color:
-                    self.valid_moves.append((self.row + 1, self.column - 1))
+
+            if self.color == Color.WHITE:
+                space = board[self.row - 1][self.column - 1]
+                if isinstance(space, Piece):
+                    if space.color != self.color:
+                        self.valid_moves.append((self.row - 1, self.column - 1))
+
+            elif self.color == Color.BLACK:
+                space = board[self.row + 1][self.column - 1]
+                if isinstance(space, Piece):
+                    if space.color != self.color:
+                        self.valid_moves.append((self.row + 1, self.column - 1))
 
 
 

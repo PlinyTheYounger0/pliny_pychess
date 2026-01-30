@@ -37,9 +37,9 @@ def set_pieces(board):
             (Bishop, PieceType.BISHOP),
             (Queen, PieceType.QUEEN),
             (King, PieceType.KING),
-            (Rook, PieceType.ROOK),
-            (Knight, PieceType.KNIGHT),
             (Bishop, PieceType.BISHOP),
+            (Knight, PieceType.KNIGHT),
+            (Rook, PieceType.ROOK),
             ]
 
     for column, (piece, piece_type) in enumerate(back_rank, start = 1):
@@ -80,6 +80,8 @@ def update_pieces(board):
         for item in row:
             if isinstance(item, Piece):
                 item.check_valid_moves(board)
+            else:
+                continue
 
 
 
