@@ -64,12 +64,12 @@ def get_piece(board, piece_type, origin_column, origin_row):
 
     if not isinstance(piece, Piece):
         print('\nNo piece at origin position. Please try a different position\n')
-        return
+        return None, 1
     elif piece.piece_type != piece_type:
         print('\nThere is not the piece you sought at that position\n')
-        return
+        return None, 1
     else:
-        return piece
+        return piece, 0
 
 def print_board(board):
     for row in board:

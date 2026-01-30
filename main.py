@@ -23,24 +23,26 @@ def main():
         else:
             piece, origin_column, origin_row, new_column, new_row = input_parser(player_input)
         
-        moving_piece = get_piece(board, piece, origin_column, origin_row)
+        moving_piece, get_piece_exit_code = get_piece(board, piece, origin_column, origin_row)
         
-        if turn_color == 'White' and moving_piece.color != Color.WHITE:
-            print('\n***You cannot move a piece of the opposite color***\n')
-        elif turn_color == 'Black' and moving_piece.color != Color.BLACK:
-            print('\n***You cannot move a piece of the opposite color***\n')
-        else:    
-            moving_piece.check_valid_moves(board)
-            print(moving_piece)
-            print('Same Object?', board[origin_row][origin_column] == moving_piece)
-            print('Moving Piece Row, Column', (moving_piece.row, moving_piece.column))
-            print(moving_piece.valid_moves)
-            board, move_exit_code = moving_piece.move(board, new_row, new_column)
+        if get_piece_exit_code == 0:
+
+            if turn_color == 'White' and moving_piece.color != Color.WHITE:
+                print('\n***You cannot move a piece of the opposite color***\n')
+            elif turn_color == 'Black' and moving_piece.color != Color.BLACK:
+                print('\n***You cannot move a piece of the opposite color***\n')
+            else:    
+                moving_piece.check_valid_moves(board)
+                print(moving_piece)
+                print('Same Object?', board[origin_row][origin_column] == moving_piece)
+                print('Moving Piece Row, Column', (moving_piece.row, moving_piece.column))
+                print(moving_piece.valid_moves)
+                board, move_exit_code = moving_piece.move(board, new_row, new_column)
         
-        if turn_color == 'White' and move_exit_code == 0:
-            turn_color = 'Black'
-        elif turn_color == 'Black' and move_exit_code == 0:
-            turn_color = 'White'
+            if turn_color == 'White' and move_exit_code == 0:
+                turn_color = 'Black'
+            elif turn_color == 'Black' and move_exit_code == 0:
+                turn_color = 'White'
 
 if __name__ == '__main__':
     main()

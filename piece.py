@@ -33,7 +33,60 @@ class Rook(Piece):
         super().__init__(row, column, Color, PieceType)
         self.has_moved = False
 
-        def move(self, board, new_row, new_column):
+    def move(self, board, new_row, new_column):
+        move = (new_row, new_column)
+        old_column = self.column
+        old_row = self.row
+
+        if self.valid_moves:
+            if move in self.valid_moves:
+                board[new_row][new_column] = self
+                self.column = new_column
+                self.row = new_row
+                board[old_row][old_column] = ' *'
+                self.has_moved = True
+            else:
+                print('\n***Invalid Move***\n')
+                return board, 1
+
+        else:
+            print('\n***Invalid Move***\n')
+            return board, 1
+
+        return board, 0
+                
+
+    def check_valid_moves(self, board):
+        self.valid_moves = []
+        directions = [ 
+                    (0, -1),
+                    (0, 1),
+                    (-1, 0),
+                    (1, 0),
+                ]
+
+        for direction_row, direction_column in directions:
+            row = self.row + direction_row
+            column = self.column + direction_column
+
+            while 1 <= row <= 8 and 1 <= column <= 8:
+                space = board[row][column]
+
+                if isinstance(space, Piece):
+                    if self.color != space.color:
+                        self.valid_moves.append((self.row, column))
+                    break 
+                
+                self.valid_moves.append((row, column))
+
+                row += direction_row
+                column += direction_column
+
+class Knight(Piece):
+    def __init__(self, row, column, Color, PieceType):
+        super().__init__(row, column, Color, PieceType)
+        
+    def move(self, board, new_row, new_column):
             move = (new_row, new_column)
             old_column = self.column
             old_row = self.row
@@ -44,152 +97,113 @@ class Rook(Piece):
                     self.column = new_column
                     self.row = new_row
                     board[old_row][old_column] = ' *'
-                    self.has_moved = True
             else:
                 print('\n***Invalid Move***\n')
                 return board, 1
 
             return board, 0
-                
-
-        def check_valid_moves(self, board):
-            self.valid_moves = []
-
-            for column in range(self.column + 1, 9):
-                space = board[self.row][column]
-
-                if not isinstance(space, Piece):
-                    self.valid_moves.append((self.row, column))
-                else:
-                    if self.color == space.color:
-                        break
-                    if self.color != space.color:
-                        self.valid_moves.append((self.row, column))
-                        break 
-
-            for column in range(self.column - 1, 0, -1):
-                space = board[self.row][column]
-
-                if not isinstance(space, Piece):
-                    self.valid_moves.append((self.row, column))
-                else:
-                    if self.color == space.color:
-                        break
-                    elif self.color != space.color:
-                        self.valid_moves.append((self.row, column))
-                        break
-
-
-            for row in range(self.row + 1, 9):
-                space = board[row][self.column]
-                if not isinstance(space, Piece):
-                    self.valid_moves.append((row, self.column))
-                else:
-                    if self.color == space.color:
-                        break
-                    if self.color != space.color:
-                        self.valid_moves.append((row, self.column))
-                        break
-
-            for row in range(self.row - 1, 0, -1):
-                space = board[row][self.column]
-
-                if not isinstance(space, Piece):
-                    self.valid_moves.append((row, self.column))
-                else:
-                    if self.color == space.color:
-                        break
-                    if self.color != space.color:
-                        self.valid_moves.append((row, self.column))
-                        break
-
-
-class Knight(Piece):
-    def __init__(self, row, column, Color, PieceType):
-        super().__init__(row, column, Color, PieceType)
-        
-    def move(self, board, new_row, new_column):
-        pass
 
     def check_valid_moves(self, board):
         self.valid_moves = []
+        directions = [
+                    (-2, 1),
+                    (-2, -1),
+                    (2, 1),
+                    (2, -1),
+                    (1, -2),
+                    (-1, -2),
+                    (1, 2),
+                    (-1, 2),
+                ]
+        for direction_row, direction_column in directions:
+            row = self.row + direction_row
+            column = self.column + direction_column
 
-        if self.row - 2 > 0:
+            if 1 <= row <= 8 and 1 <= column <= 8:
+                space = board[row][column]
 
-            if self.column + 1 < 8:
-                space = board[self.row - 2][self.column + 1]
-                if isinstance (space, Piece):
-                    if self.color != space.color:
-                        self.valid_moves.append((self.row - 2, self.column + 1))
-                else:
-                    self.valid_moves.append((self.row - 2, self.column + 1))
-
-            if self.column - 1 > 0:
-                space = board[self.row - 2][self.column - 1]
                 if isinstance(space, Piece):
                     if self.color != space.color:
-                        self.valid_moves.append((self.row - 2, self.column - 1))
-                else:
-                    self.valid_moves.append((self.row - 2, self.column - 1))
+                        self.valid_moves.append((row, column))
+                    else:
+                        continue
 
-        if self.row + 2 < 9:
-
-            if self.column + 1 < 8:
-                space = board[self.row + 2][self.column + 1]
-                if isinstance (space, Piece):
-                    if self.color != space.color:
-                        self.valid_moves.append((self.row + 2, self.column + 1))
-                else:           
-                    self.valid_moves.append((self.row + 2, self.column + 1))
-                    
-            if self.column - 1 > 0:
-                space = board[self.row + 2][self.column - 1]
-                if isinstance(space, Piece):
-                    if self.color != space.color:
-                        self.valid_moves.append((self.row + 2, self.column - 1))
-                else:   
-                    self.valid_moves.append((self.row + 2, self.column - 1))
-
-        if self.column + 2 < 9:
-
-            if self.row - 1 > 0:
-                space = board[self.row - 1][self.column + 2]
-                if isinstance(space, Piece):
-                    if self.color != space.color:
-                        self.valid_moves.append((self.row - 1, self.column + 2))
-                else:
-                    self.valid_moves.append((self.row - 1, self.column + 2))
-
-            if self.row + 1 < 9:
-                space = board[self.row + 1][self.column + 2]
-                if isinstance(space, Piece):
-                    if self.color != space.color:
-                        self.valid_moves.append((self.row + 1, self.column + 2))
-                else:
-                    self.valid_moves.append((self.row + 1, self.column + 2))
-
-        if self.column - 2 > 0:
-
-            if self.row - 1 > 0:
-                space = board[self.row - 1][self.column - 2]
-                if isinstance(space, Piece):
-                    if self.color != space.color:
-                        self.valid_moves.append((self.row - 1, self.column - 2))
-                else:   
-                    self.valid_moves.append((self.row - 1, self.column - 2))
-                    
-            if self.row + 1 < 9:
-                space = board[self.row + 1][self.column - 2]
-                if isinstance(space, Piece):
-                    if self.color != space.color:
-                        self.valid_moves.append((self.row + 1, self.column - 2))
-                else:   
-                    self.valid_moves.append((self.row + 1, self.column - 2))
-
+                self.valid_moves.append((row, column))
 
 class Bishop(Piece):
     def __init__(self, row, column, Color, PieceType):
         super().__init__(row, column, Color, PieceType)
+
+    def move(self, board, new_row, new_column):
+        pass
+'''
+    def check_valid_moves(self, board):
+        self.valid_moves = []
+        count = 1
+        
+        for column in range(self.column + 1, 9):
+            if self.row - count > 0:
+                space = board[self.row - count][column]
+                count += 1
+
+                if isinstance(space, Piece):
+                    if self.color == space.color:
+                        break
+                    else:
+                        self.valid_moves.append((self.row - count, column))
+                        break
+                else:
+                    self.valid_moves.append((self.row - count, column))
+
+        count = 1
+
+        for column in range(self.column - 1, 0, -1):
+            if self.row - count > 0:
+                space = board[self.row - count][column]
+                count += 1
+
+                if isinstance(space, Piece):
+                    if self.color == space.color:
+                        break
+                    else:
+                        self.valid_moves.append((self.row - count, column)
+                        break
+                else:
+                    self.vald_moves.append((self.row - count, column))
+
+        count = 1
+
+        for column in range(self.column + 1, 9):
+            if self.row + count < 9:
+                space = board[self.row + count][column]
+                count += 1
+                
+                if isinstance(space, Piece):
+                    if self.color == space.color:
+                        break
+                    else:
+                        self.valid_moves.append((self.row + count, column)
+                        break   
+                else:   
+                    self.vald_moves.append((self.row + count, column))
+
+        count = 1
+
+        for column in range(self.column - 1, 0, -1):
+            if self.row + count < 9:
+                space = board[self.row + count][column]
+                count += 1
+                
+                if isinstance(space, Piece):
+                    if self.color == space.color:
+                        break
+                    else:
+                        self.valid_moves.append((self.row + count, column)
+                        break   
+                else:   
+                    self.vald_moves.append((self.row + count, column))
+'''
+
 
 class Queen(Piece):
     def __init__(self, row, column, Color, PieceType):
