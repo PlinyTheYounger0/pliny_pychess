@@ -38,7 +38,7 @@ class Rook(Piece):
 
         if self.valid_moves:
             if move in self.valid_moves:
-                board[self.row][self.column] = ' *'
+                board[self.row][self.column] = '*"'
                 self.column = new_column
                 self.row = new_row
                 board[self.column][row] = self
@@ -83,7 +83,7 @@ class Knight(Piece):
 
             if self.valid_moves:
                 if move in self.valid_moves:
-                    board[self.row][self.column] = ' *'
+                    board[self.row][self.column] = '*"'
                     self.column = new_column
                     self.row = new_row
                     board[self.row][self.column] = self
@@ -129,7 +129,7 @@ class Bishop(Piece):
 
         if self.valid_moves:
             if move in self.valid_moves:
-                board[self.row][self.column] = ' *'
+                board[self.row][self.column] = '*"'
                 self.row = new_row
                 self.column = new_column
                 board[self.row][self.column] = self
@@ -174,7 +174,7 @@ class Queen(Piece):
 
         if self.valid_moves:
             if move in self.valid_moves:
-                board[self.row][self.column] = ' *'
+                board[self.row][self.column] = '*"'
                 self.row = new_row
                 self.column = new_column
                 board[self.row][self.column] = self
@@ -221,6 +221,120 @@ class King(Piece):
         self.in_check = False
         self.mated = False
 
+    def move(self, board, new_row, new_column):
+        move = (new_row, new_column)
+        left_castle_moves = [(8, 3), (1, 3)]
+        right_castle_moves = [(8, 7), (1, 7)] 
+
+        if self.valid_moves:
+            if move in self.valid_moves:
+                if self.has_moved == False:
+
+                    if move in left_castle_moves:
+                        board[self.row][self.column] = '*"'
+                        self.row = new_row
+                        self.column = new_column
+                        board[self.row][self.column] = self
+
+                        rook = board[new_row][1]
+                        board[rook.row][rook.column] = '*"'
+                        rook.column = 4
+                        board[rook.row][rook.column] = rook
+
+                    if move in right_castle_moves:
+                        board[self.row][self.column] = '*"'
+                        self.column = new_column
+                        board[self.row][self.column] = self
+
+                        rook = board[new_row][8]
+                        board[rook.row][rook.column] = '*"'
+                        rook.column = 6
+                        board[rook.row][rook.column] = rook
+
+                board[self.row][self.column] = '*"'
+                self.row = new_row
+                self.column = new_column
+                board[self.row][self.column] = self
+                self.has_moved = True
+                return board, 0
+
+        print('\n***Invalid Move***\n')
+        return board, 1
+
+    def check_valid_moves(self, board):
+        self.valid_moves = []
+
+        directions = [
+                    (-1, 1),
+                    (-1, 0),
+                    (-1, -1),
+                    (0, -1),
+                    (1, -1),
+                    (1, 0),
+                    (1, 1),
+                    (0, 1),
+                ]
+
+        for direction_row, direction_column in directions:
+            row = self.row + direction_row
+            column = self.column + direction_column
+            if 1 <= row <= 8 and 1 <= column <= 8: 
+                space = board[row][column]
+
+                if isinstance(space, Piece):
+                    if self.color != space.color:
+                        self.valid_moves.append((row, column))
+
+                self.valid_moves.append((row, column))
+        
+        if self.in_check == False and self.has_moved == False:
+            left_pieces = 0
+            right_pieces = 0
+            white_right_rook = board[8][8]
+            white_left_rook = board[8][1]
+            black_right_rook = board[1][8]
+            black_left_rook = board[1][1]
+
+            for column in range(2, 5):
+                space = board[self.row][column]
+
+                if isinstance(space, Piece):
+                    left_pieces += 1
+            
+            for column in range(6, 8):
+                space = board[self.row][column]
+                
+                if isinstance(space, Piece):
+                    right_pieces += 1
+
+            if left_pieces == 0:
+                if self.color == Color.WHITE and white_left_rook.has_moved == False:
+                    self.valid_moves.append((8, 3))
+                elif self.color == Color.BLACK and black_left_rook.has_moved == False:
+                    self.valid_moves.append((1, 3))
+
+            if right_pieces == 0:
+                if self.color == Color.WHITE and white_right_rook.has_moved == False:
+                    self.valid_moves.append((8,7))
+                elif self.color == Color.BLACK and black_right_rook.has_moved == False:
+                    self.valid_moves.append((1, 7))
+
+        if self.in_check == True and not self.valid_moves:
+            self.mated = True
+
+
+    def king_in_check(self, board):
+        
+        for row in range(1, 9):
+            for column in range(1, 9):
+                space = board[row][column]
+
+                if isinstance(space, Piece):
+                    if self.color != space.color:
+                        if (self.row, self.column) in space.valid_moves:
+                            self.in_check = True
+        self.in_check = False
+
 class Pawn(Piece):
     def __init__(self, row, column, Color, PieceType, has_moved=False):
         super().__init__(row, column, Color, PieceType)
@@ -231,7 +345,7 @@ class Pawn(Piece):
 
         if self.valid_moves:
             if move in self.valid_moves:
-                board[self.row][self.column] = ' *'
+                board[self.row][self.column] = '*"'
                 self.column = new_column
                 self.row = new_row
                 board[self.row][self.column] = self

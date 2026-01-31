@@ -14,7 +14,7 @@ def init_board():
     
     rows = 8
     columns = 8
-    new_space = ' *'
+    new_space = '*"'
     board = [[' ',' A', ' B', ' C', ' D', ' E', ' F', ' G', ' H']]
 
     for i in range(rows):
@@ -76,10 +76,13 @@ def print_board(board):
         print(*(item.rep if isinstance(item, Piece) else item for item in row))
 
 def update_pieces(board):
-    for row in board:
-        for item in row:
-            if isinstance(item, Piece):
-                item.check_valid_moves(board)
+    for row in range(1, 9):
+        for column in range(1,9):
+            space = board[row][column]
+            if isinstance(space, Piece):
+                space.check_valid_moves(board)
+                space.row = row
+                space.column = column
             else:
                 continue
 

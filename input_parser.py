@@ -3,7 +3,8 @@ from piece import PieceType
 
 def input_parser(user_input):
     if len(user_input) != 5:
-        raise ValueError('Input must be 5 characters long')
+        print('Input must be 5 characters long')
+        return
 
     piece_var = user_input[0]
 
