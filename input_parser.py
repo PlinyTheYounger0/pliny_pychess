@@ -28,21 +28,21 @@ def input_parser(user_input):
 
     for column in str_columns:
         if column == 'A':
-            int_columns.append(1)
+            int_columns.append(0)
         elif column == 'B':
-            int_columns.append(2)
+            int_columns.append(1)
         elif column == 'C':
-            int_columns.append(3)
+            int_columns.append(2)
         elif column == 'D':
-            int_columns.append(4)
+            int_columns.append(3)
         elif column == 'E':
-            int_columns.append(5)
+            int_columns.append(4)
         elif column == 'F':
-            int_columns.append(6)
+            int_columns.append(5)
         elif column == 'G':
-            int_columns.append(7)
+            int_columns.append(6)
         elif column == 'H':
-            int_columns.append(8)
+            int_columns.append(7)
         else:
             raise Exception('Error in column input. Ensure use of A-H')
 
@@ -50,8 +50,8 @@ def input_parser(user_input):
         raise Exception('Error in row input. Rows must be between 1 and 8')
 
     origin_column = int_columns[0]
-    origin_row = 9 - int(user_input[2])
+    origin_row = 8 - int(user_input[2])
     new_column = int_columns[1]
-    new_row = 9 - int(user_input[4])
+    new_row = 8 - int(user_input[4])
 
     return piece, origin_column, origin_row, new_column, new_row

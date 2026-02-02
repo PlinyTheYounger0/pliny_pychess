@@ -1,4 +1,5 @@
 
+import copy
 from piece import (
         Piece,
         PieceType, 
@@ -10,21 +11,19 @@ from piece import (
         King,
         Pawn
         )
+
 def init_board():
     
     rows = 8
     columns = 8
     new_space = '*"'
-    board = [[' ',' A', ' B', ' C', ' D', ' E', ' F', ' G', ' H']]
+    board = []
 
     for i in range(rows):
         new_row = []
-        new_row.append(rows - i)
         for j in range(columns):
             new_row.append(new_space)
         board.append(new_row)
-    
-    
     
     return board
 
@@ -42,12 +41,12 @@ def set_pieces(board):
             (Rook, PieceType.ROOK),
             ]
 
-    for column, (piece, piece_type) in enumerate(back_rank, start = 1):
+    for column, (piece, piece_type) in enumerate(back_rank, start = 0):
           pieces.extend([
-                piece(8, column, Color.WHITE, piece_type),
-                Pawn(7, column, Color.WHITE, PieceType.PAWN),
-                piece(1, column, Color.BLACK, piece_type),
-                Pawn(2, column, Color.BLACK, PieceType.PAWN),
+                piece(7, column, Color.WHITE, piece_type),
+                Pawn(6, column, Color.WHITE, PieceType.PAWN),
+                piece(0, column, Color.BLACK, piece_type),
+                Pawn(1, column, Color.BLACK, PieceType.PAWN),
             ])
 
 
@@ -72,12 +71,27 @@ def get_piece(board, piece_type, origin_column, origin_row):
         return piece, 0
 
 def print_board(board):
-    for row in board:
+
+    print_board = copy.deepcopy(board)
+
+    column_header = [' ', 'A ', 'B ', 'C ', 'D ', 'E ', 'F ', 'G ', 'H ']
+    row_header = [1, 2, 3, 4, 5, 6, 7, 8]
+
+    print_board.insert(0, column_header)
+    print_board.append(column_header)
+
+    for i in range(len(print_board)):
+        if i in row_header:
+            row_number_header = 9 - i
+            print_board[i].insert(0, row_number_header)
+            print_board[i].append(row_number_header)
+
+    for row in print_board:
         print(*(item.rep if isinstance(item, Piece) else item for item in row))
 
 def update_pieces(board):
-    for row in range(1, 9):
-        for column in range(1,9):
+    for row in range(0, 8):
+        for column in range(0,8):
             space = board[row][column]
             if isinstance(space, Piece):
                 space.check_valid_moves(board)

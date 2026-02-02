@@ -7,8 +7,8 @@ def main():
     board = init_board()
     board = set_pieces(board)
     
-    white_king = board[8][5]
-    black_king = board[1][5]
+    white_king = board[7][4]
+    black_king = board[0][4]
     turn_color = 'White'
 
     print_board(board)
@@ -60,8 +60,12 @@ def main():
                     
                     if turn_color == 'White' and white_king.in_check == True:
                         print('\n***Invalid Move***\n***King in Check***')
+                        print_board(board)
+                        continue
                     elif turn_color == 'Black' and black_king.in_check == True:
                         print('\n***Invalid Move***\n***King in Check***')
+                        print_board(board)
+                        continue
                     else:
                         board = new_board
                         if turn_color == 'White':
